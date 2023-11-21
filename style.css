@@ -1,60 +1,25 @@
-@font-face {
-  font-family: "ArcadeClassic";
-  src: url("/font/ArcadeClassic.ttf");
-}
-
-body {
-  font-family: "ArcadeClassic", monospace;
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+body {
+  font-family: monospace;
+}
+
 main {
-  display: block;
   margin: 0 auto;
   padding: 10px;
   max-width: 970px;
-  & li {
-    font-size: 18px;
+  & h1 {
+    font-size: 42px;
+    margin-bottom: 20px;
   }
 }
-.game {
-  margin-bottom: 200px;
-}
-.kenney {
-  display: flex;
-  justify-content: center;
-  & a {
-    margin-left: 5px;
-  }
-}
+
 canvas {
   display: block;
   margin: 0 auto;
   border: 2px solid black;
-}
-footer {
-  margin-top: 50px;
-  padding: 20px 0;
-  background-color: black;
-  color: white;
-  width: 100%;
-  & span {
-    display: flex;
-    justify-content: center;
-  }
-  & .socials {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    & i {
-      color: white;
-      font-size: 28px;
-      margin-top: 10px;
-    }
-    & i:hover {
-      transform: scale(1.2);
-    }
-  }
 }

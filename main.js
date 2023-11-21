@@ -1,9 +1,21 @@
 import kaboom from "kaboom";
+import * as dat from "dat.gui";
 
-const JUMP_FORCE = 380;
-const SPEED = 400;
-const PIPE_GAP = 140;
-const SPAWN_TIME = 0.5;
+var gui = new dat.GUI();
+
+const settings = {
+  jumpForce: 380,
+  speed: 400,
+  pipeGap: 140,
+  spawnTime: 1,
+};
+
+gui.add(settings, "jumpForce", 300, 500).name("Jump Force");
+gui.add(settings, "speed", 100, 1000).name("Speed");
+gui.add(settings, "pipeGap", 100, 200).name("Pipe Gap");
+gui.add(settings, "spawnTime", 0.3, 2).name("Spawn Time");
+
+gui.close();
 
 let score = 0;
 let highScore = localStorage.getItem("highScore") || 0;
@@ -16,28 +28,27 @@ const k = kaboom({
 });
 
 loadSprite("bean", "sprites/bean.png");
-loadFont("ArcadeClassic", "/fonts/ArcadeClassic.ttf");
 
 const spawnPipes = () => {
   const offset = rand(-50, 50);
 
-  const firstPipe = k.add([
+  const firstPipe = add([
     rect(60, 600),
     area(),
-    pos(width(), height() / 2 - offset - PIPE_GAP),
+    pos(width(), height() / 2 - offset - settings.pipeGap),
     outline(4),
     color(255, 180, 255),
-    move(LEFT, SPEED),
+    move(LEFT, settings.speed),
     offscreen({ destroy: true }),
     anchor("botleft"),
     "pipe",
   ]);
 
   add([
-    rect(60, PIPE_GAP),
+    rect(60, settings.pipeGap),
     area(),
     pos(firstPipe.pos),
-    move(LEFT, SPEED),
+    move(LEFT, settings.speed),
     color(51, 151, 255),
     z(-1),
     offscreen({ destroy: true }),
@@ -50,7 +61,7 @@ const spawnPipes = () => {
     pos(width(), height() / 2 - offset),
     outline(4),
     color(255, 180, 255),
-    move(LEFT, SPEED),
+    move(LEFT, settings.speed),
     offscreen({ destroy: true }),
     "pipe",
   ]);
@@ -61,7 +72,6 @@ scene("start screen", () => {
     text(`Hello (●'◡'●)\nClick to start\nHigh Score: ${highScore}`, {
       size: 28,
       align: "center",
-      font: "ArcadeClassic",
     }),
     anchor("center"),
     pos(width() / 2, height() / 2),
@@ -91,13 +101,9 @@ scene("game", () => {
     "player",
   ]);
 
-  const scoreObject = add([
-    text("Score: 0", { font: "ArcadeClassic" }),
-    pos(10, 10),
-    z(100),
-  ]);
+  const scoreObject = add([text("Score: 0"), pos(10, 10), z(100)]);
 
-  k.onCollideEnd("player", "gap", () => {
+  onCollideEnd("player", "gap", () => {
     score++;
 
     if (highScore < score) {
@@ -108,7 +114,7 @@ scene("game", () => {
     scoreObject.text = `Score ${score}`;
   });
 
-  loop(SPAWN_TIME, () => spawnPipes());
+  loop(settings.spawnTime, () => spawnPipes());
 
   onUpdate(() => {
     if (player.pos.y > height() + 40 || player.pos.y < -40) {
@@ -120,14 +126,13 @@ scene("game", () => {
     go("game over");
   });
 
-  onKeyPress("space", () => player.jump(JUMP_FORCE));
-  onClick(() => player.jump(JUMP_FORCE));
+  onKeyPress("space", () => player.jump(settings.jumpForce));
+  onClick(() => player.jump(settings.jumpForce));
 });
 
 scene("game over", () => {
   add([
     text(`Game over\n Score: ${score}\nHigh Score: ${highScore}`, {
-      font: "ArcadeClassic",
       align: "center",
     }),
     anchor("center"),
